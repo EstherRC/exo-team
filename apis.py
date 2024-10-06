@@ -1,11 +1,19 @@
-from fastapi import FastAPI
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, HTTPException
 from gaia import get_planet_and_closest_stars
+
 app = FastAPI()
 
-#Get the planet and the closest stars
-#planet_name and n_closest are the parameters to be passed
+def clean_dataframe(df):
+    return df.replace([float('inf'), float('-inf'), float('nan')], 0).fillna(0)
+
 @app.get("/stars/planet")
 def get_stars(planet_name: str, n_closest: int):
-    planetrow,closest_stars = get_planet_and_closest_stars(planet_name, n_closest)
-    return {"planet": planetrow.to_dict(orient="records"), "stars": closest_stars.to_dict(orient="records")}
+    planet_row, closest_stars = get_planet_and_closest_stars(planet_name)
+    planet_row_cleaned = clean_dataframe(planet_row)
+    closest_stars_cleaned = clean_dataframe(closest_stars)
+
+    return {
+        "planet": planet_row_cleaned.to_dict(orient="records"),
+        "stars": closest_stars_cleaned.to_dict(orient="records")
+    }
+    
