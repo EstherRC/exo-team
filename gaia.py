@@ -8,7 +8,7 @@ from astroquery.gaia import Gaia
 exoplanet_data = pd.read_csv("data/exoplanets.csv")
 
 # Function to query Gaia for stars closest to the planet's coordinates
-def get_planet_and_closest_stars(planet_name, n_closest):
+def get_planet_and_closest_stars(planet_name):
     # Filter the exoplanet data for the specific planet
     planet_row = exoplanet_data[exoplanet_data['pl_name'] == planet_name]
     
@@ -22,15 +22,13 @@ def get_planet_and_closest_stars(planet_name, n_closest):
     
     # ADQL query to get the closest stars from Gaia based on planet's coordinates
     query = f"""
-    SELECT source_id, ra, dec, parallax, phot_g_mean_mag, 
+    SELECT source_id, ra, dec, parallax, phot_g_mean_mag,
            DISTANCE(POINT({planet_ra}, {planet_dec}), POINT(ra, dec)) AS angular_distance
     FROM gaiadr3.gaia_source
     WHERE 1=CONTAINS(
-        POINT({planet_ra}, {planet_dec}), 
+        POINT({planet_ra}, {planet_dec}),
         CIRCLE(POINT(ra, dec), 0.5)
     )
-    ORDER BY angular_distance ASC
-    LIMIT {n_closest};
     """
 
     # Launch the query to Gaia archive
@@ -39,6 +37,7 @@ def get_planet_and_closest_stars(planet_name, n_closest):
 
     # Convert results to pandas DataFrame for further processing
     closest_stars = results.to_pandas()
+
 
     # Return the planet row and closest stars
     return planet_row, closest_stars
