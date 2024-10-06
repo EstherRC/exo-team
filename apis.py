@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from gaia import get_planet_and_closest_stars
+from gaia import get_planet_and_closest_stars, get_planets
 
 app = FastAPI()
 
@@ -17,3 +17,6 @@ def get_stars(planet_name: str, n_closest: int):
         "stars": closest_stars_cleaned.to_dict(orient="records")
     }
     
+@app.get("/planets")
+def get_all_planets(): 
+    return get_planets()

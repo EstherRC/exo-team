@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from astropy.coordinates import SkyCoord
 from astropy import units as u
 from astroquery.gaia import Gaia
+from random import shuffle
 
 # Load the exoplanet data from your local dataset
 exoplanet_data = pd.read_csv("data/exoplanets.csv")
@@ -41,3 +42,16 @@ def get_planet_and_closest_stars(planet_name):
 
     # Return the planet row and closest stars
     return planet_row, closest_stars
+
+def get_planets():
+    # This returns the planet names, RA, and Dec
+    '''return {
+        "planets": exoplanet_data[['pl_name', 'ra', 'dec']].to_dict(orient="records")
+    }'''
+    # Just get planet names
+
+    planet_names = exoplanet_data['pl_name'].tolist()
+    shuffle(planet_names)
+    return {
+        "planets": planet_names
+    }
