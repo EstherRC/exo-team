@@ -1,0 +1,10 @@
+astroquery
+fastapi
+pandas
+
+#astropy==6.1.4
+#astroquery==0.4.7
+#fastapi==0.115.0
+#matplotlib==3.9.2
+#pandas==2.2.3
+#Requests==2.32.3
